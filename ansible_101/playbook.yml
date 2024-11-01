@@ -1,0 +1,10 @@
+---
+- name: My first Ansible playbook
+  hosts: localhost
+
+  tasks:
+    - name: Create a new file
+      ansible.builtin.file:
+        dest: "{{ playbook_dir }}/hello_world.txt"
+        state: touch
+        mode: "0755"

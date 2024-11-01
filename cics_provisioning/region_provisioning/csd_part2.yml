@@ -1,0 +1,30 @@
+---
+- name: Create a CSD
+  hosts: all
+  gather_facts: false
+  environment: "{{  z_environment_vars }}"
+
+  tasks:
+    - name: Create a new CICS CSD data set
+      ibm.ibm_zos_cics.csd:
+        state: initial
+        region_data_sets:
+          dfhcsd:
+            dsn: "HUGHEA.DEMO.DFHCSD"
+        cics_data_sets:
+          sdfhload: "CTS610.CICS740.SDFHLOAD"
+
+    - name: Add DFHTERMC to CSD
+      ibm.ibm_zos_cics.csd:
+        state: changed
+        region_data_sets:
+          dfhcsd:
+            dsn: "HUGHEA.DEMO.DFHCSD"
+        cics_data_sets:
+          sdfhload: "CTS610.CICS740.SDFHLOAD"
+
+        input_location: INLINE
+        input_content: |
+          ADD GROUP(DFHTERMC) LIST(DFHLIST1)
+
+          LIST LIST(DFHLIST1) OBJECTS

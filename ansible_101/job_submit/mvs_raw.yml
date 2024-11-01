@@ -1,0 +1,31 @@
+---
+- name: Use ZOAU mvscmd to run a z/OS program
+  hosts: all
+  gather_facts: false
+  environment: "{{  z_environment_vars }}"
+
+  vars:
+    csd_dsn: HUGHEA.REGIONS.IYK2ZPZ2.DFHCSD
+    sdfhload: CTS610.CICS740.SDFHLOAD
+    csd_group: DFHTERMC
+
+  tasks:
+    - name: Run DFHCSDUP with mvs_raw
+      ibm.ibm_zos_core.zos_mvs_raw:
+        program_name: DFHCSDUP
+        dds:
+          - dd_data_set:
+              dd_name: steplib
+              data_set_name: "{{ sdfhload }}"
+              disposition: shr
+          - dd_data_set:
+              dd_name: dfhcsd
+              data_set_name: "{{ csd_dsn }}"
+              disposition: shr
+          - dd_output:
+              dd_name: sysprint
+              return_content:
+                type: text
+          - dd_input:
+              dd_name: sysin
+              content: "LIST GROUP({{ csd_group }})"

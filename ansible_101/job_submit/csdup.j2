@@ -1,0 +1,9 @@
+//CSDJOB   JOB
+//         EXEC PGM=DFHCSDUP,REGION=0M
+//STEPLIB  DD   DSN={{ sdfhload }},DISP=SHR
+//DFHCSD   DD  DISP=SHR,DSN={{ csd_dsn }}
+//SYSPRINT DD  SYSOUT=A
+//SYSIN    DD  *
+     LIST GROUP({{ csd_group }})
+/*
+//

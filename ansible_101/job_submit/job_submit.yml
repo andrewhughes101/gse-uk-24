@@ -1,0 +1,29 @@
+---
+- name: Sample zos_job_submit template playbook
+  hosts: all
+  gather_facts: false
+  environment: "{{  z_environment_vars }}"
+
+  vars:
+    csd_dsn: HUGHEA.REGIONS.IYK2ZPZ2.DFHCSD
+    sdfhload: CTS610.CICS740.SDFHLOAD
+    csd_group: DFHTERMC
+
+
+  tasks:
+    - name: Copy the JCL template to Dataset
+      ibm.ibm_zos_core.zos_copy:
+        src: "{{ playbook_dir }}/csdup.j2"
+        use_template: true
+        dest: "{{ ansible_user | upper }}.CSDUP.SAMPLE"
+
+    - name: Submit the job
+      ibm.ibm_zos_core.zos_job_submit:
+        location: DATA_SET
+        src: "{{ ansible_user | upper }}.CSDUP.SAMPLE"
+      register: job_submit
+
+    - name: Cleanup data set
+      ibm.ibm_zos_core.zos_data_set:
+        state: absent
+        name: "{{ ansible_user | upper }}.CSDUP.SAMPLE"
