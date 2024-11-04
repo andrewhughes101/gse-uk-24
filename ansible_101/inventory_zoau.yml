@@ -2,13 +2,14 @@ source_system:
   hosts:
     zos:
       ansible_host: winmvs28.hursley.ibm.com
-      ansible_user: KIERAB
-      ansible_python_interpreter: /python/v3114/pyz/bin/python3
+      ansible_user: HUGHEA
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
       pyz: "/python/v3114/pyz"
       zoau: "/usr/lpp/IBM/zoau/v1r2"
+      ansible_python_interpreter: "{{ pyz }}/bin/python3"
 
-      environment_vars:
+      z_environment_vars:
         _BPXK_AUTOCVT: "ON"
         ZOAU_HOME: "{{ zoau }}"
         LIBPATH: "{{ zoau }}/lib:{{ pyz }}/lib:/lib:/usr/lib:."
@@ -18,4 +19,4 @@ source_system:
         _TAG_REDIR_IN: "txt"
         _TAG_REDIR_OUT: "txt"
         LANG: "C"
-        TMPDIR: "/u/kierab/tmp"
+        TMPDIR: "/u/{{ ansible_user | lower }}/tmp"
